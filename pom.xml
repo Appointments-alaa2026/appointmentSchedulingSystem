@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- نسخة نموذج المشروع -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- تعريف هوية المشروع -->
+    <groupId>com.setup</groupId>        <!-- اسم الشركة أو الفريق / Namespace -->
+    <artifactId>setup-core</artifactId> <!-- اسم المشروع -->
+    <version>0.0.1-SNAPSHOT</version>  <!-- رقم النسخة: SNAPSHOT = نسخة قيد التطوير -->
+
+    <!-- Dependencies = المكتبات الخارجية اللي رح نستخدمها -->
+    <dependencies>
+
+        <!-- JUnit 5: لاختبار الكود -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope> <!-- يعني فقط لاختبارات الوحدة -->
+        </dependency>
+
+
+
+    </dependencies>
+</project>
