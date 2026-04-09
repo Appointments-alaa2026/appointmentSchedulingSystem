@@ -1,5 +1,8 @@
 package com.appointment.scheduler.model;
 
-public class AppointmentType {
-
+public enum AppointmentType {
+    INDIVIDUAL,
+    GROUP,
+    URGENT,
+    VIRTUAL
 }

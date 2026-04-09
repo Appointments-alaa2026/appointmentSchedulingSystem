@@ -1,5 +1,7 @@
 package com.appointment.scheduler.model;
 
-public class AppointmentStatus {
-
+public enum AppointmentStatus {
+    AVAILABLE,
+    CONFIRMED,
+    CANCELLED
 }
