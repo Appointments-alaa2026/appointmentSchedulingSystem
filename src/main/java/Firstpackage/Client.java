@@ -1,6 +1,10 @@
 package Firstpackage;
 
 public class Client {
-	public void func() {}
+	public void func() {
+		
+		
+		///
+	}
 
 }
