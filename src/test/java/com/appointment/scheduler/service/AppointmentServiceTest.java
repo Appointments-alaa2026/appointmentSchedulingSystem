@@ -1,6 +1,8 @@
 package com.appointment.scheduler.service;
 
 import com.appointment.scheduler.model.*;
+import com.appointment.scheduler.strategy.DurationRule;
+import com.appointment.scheduler.strategy.ParticipantLimitRule;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -30,7 +32,11 @@ class AppointmentServiceTest {
 
         service.addAppointment(appointment);
 
-        boolean result = service.bookAppointment("1", user);
+        // 🔥 إضافة rules (مهم جدًا)
+        service.addRule(new DurationRule());
+        service.addRule(new ParticipantLimitRule());
+
+        boolean result = service.bookAppointment("1");
 
         assertTrue(result);
         assertEquals(AppointmentStatus.CONFIRMED, appointment.getStatus());
@@ -57,7 +63,11 @@ class AppointmentServiceTest {
 
         service.addAppointment(appointment);
 
-        boolean result = service.bookAppointment("1", user);
+        // 🔥 حتى هون نضيف rules (للتوحيد)
+        service.addRule(new DurationRule());
+        service.addRule(new ParticipantLimitRule());
+
+        boolean result = service.bookAppointment("1");
 
         assertFalse(result);
         assertEquals(AppointmentStatus.CONFIRMED, appointment.getStatus());

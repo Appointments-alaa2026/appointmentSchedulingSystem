@@ -4,5 +4,8 @@ public enum AppointmentType {
     INDIVIDUAL,
     GROUP,
     URGENT,
-    VIRTUAL
+    FOLLOW_UP,
+    ASSESSMENT,
+    VIRTUAL,
+    IN_PERSON
 }

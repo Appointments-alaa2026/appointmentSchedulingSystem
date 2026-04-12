@@ -1,6 +1,8 @@
-package com.appointment.scheduler.repository;
+package com.appointment.scheduler.service;
 
 import com.appointment.scheduler.model.Admin;
+import com.appointment.scheduler.repository.ConfigAdminRepository;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

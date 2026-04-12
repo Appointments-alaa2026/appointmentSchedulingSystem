@@ -18,7 +18,7 @@ public class NotificationTest {
         Observer mockObserver = mock(Observer.class);
 
         // 🔥 نمرره للـ service
-        AppointmentService service = new AppointmentService(List.of(mockObserver));
+        AppointmentService service = new AppointmentService();
 
         User user = new User("1", "Ali", "ali@test.com");
 
@@ -39,7 +39,7 @@ public class NotificationTest {
         service.addAppointment(appointment);
 
         // 🔥 تنفيذ الحجز
-        service.bookAppointment("1", user);
+        service.bookAppointment("1");
 
         // 🔥 التأكد أن الإشعار انرسل
         verify(mockObserver).notify(user, "Your photo session is booked successfully!");

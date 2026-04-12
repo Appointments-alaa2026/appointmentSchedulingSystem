@@ -1,6 +1,8 @@
 package com.appointment.scheduler.service;
 
-import com.appointment.scheduler.model.*;
+import com.appointment.scheduler.model.Appointment;
+import com.appointment.scheduler.model.AppointmentStatus;
+import com.appointment.scheduler.strategy.BookingRule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,51 +12,51 @@ import java.util.List;
  */
 public class AppointmentService {
 
-    private List<Appointment> appointments = new ArrayList<>();
+    private final List<Appointment> appointments = new ArrayList<>();
+    private final List<BookingRule> rules = new ArrayList<>();
 
     /**
-     * Adds a new appointment to the system.
+     * Adds a rule to the system (Strategy pattern).
      */
+    public void addRule(BookingRule rule) {
+        rules.add(rule);
+    }
+
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
     }
 
-    /**
-     * Returns only available appointment slots.
-     */
-    public List<Appointment> getAvailableAppointments(List<Appointment> appointments) {
+    public List<Appointment> getAvailableAppointments() {
         List<Appointment> available = new ArrayList<>();
 
-        for (Appointment appt : appointments) {
-            if (appt.getStatus() == AppointmentStatus.AVAILABLE) {
-                available.add(appt);
+        for (Appointment appointment : appointments) {
+            if (appointment.getStatus() == AppointmentStatus.AVAILABLE) {
+                available.add(appointment);
             }
         }
 
         return available;
     }
 
-    /**
-     * Books an appointment if it is available.
-     *
-     * @param appointmentId the ID of the appointment
-     * @param user the user booking the appointment
-     * @return true if booking is successful, false otherwise
-     */
-    public boolean bookAppointment(String appointmentId, User user) {
+    public boolean bookAppointment(String appointmentId) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getId().equals(appointmentId)) {
 
-        for (Appointment appt : appointments) {
-            if (appt.getId().equals(appointmentId)) {
-
-                if (appt.getStatus() == AppointmentStatus.AVAILABLE) {
-                    appt.setStatus(AppointmentStatus.CONFIRMED);
-                    return true;
+                if (appointment.getStatus() != AppointmentStatus.AVAILABLE) {
+                    return false;
                 }
 
-                return false;
+                // 🔥 أهم سطر: تطبيق rules
+                for (BookingRule rule : rules) {
+                    if (!rule.isValid(appointment)) {
+                        return false;
+                    }
+                }
+
+                appointment.setStatus(AppointmentStatus.CONFIRMED);
+                return true;
             }
         }
-
         return false;
     }
 }

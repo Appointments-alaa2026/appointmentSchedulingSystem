@@ -1,1 +1,0 @@
-package com.appointment.scheduler.repository;
