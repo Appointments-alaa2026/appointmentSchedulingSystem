@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 
-@Disabled("Observer not implemented yet")
 public class NotificationTest {
 
     @Test
