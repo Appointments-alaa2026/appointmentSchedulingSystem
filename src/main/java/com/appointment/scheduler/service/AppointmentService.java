@@ -17,46 +17,25 @@ public class AppointmentService {
     private final List<BookingRule> rules = new ArrayList<>();
     private final NotificationManager notificationManager;
 
-    /**
-     * Default constructor.
-     * Creates AppointmentService with an empty NotificationManager.
-     */
+    // ✅ NEW: store last error
+    private String lastErrorMessage;
+
     public AppointmentService() {
         this.notificationManager = new NotificationManager();
     }
 
-    /**
-     * Constructor with injected NotificationManager.
-     *
-     * @param notificationManager the notification manager
-     */
     public AppointmentService(NotificationManager notificationManager) {
         this.notificationManager = notificationManager;
     }
 
-    /**
-     * Adds a rule to the system (Strategy pattern).
-     *
-     * @param rule booking rule
-     */
     public void addRule(BookingRule rule) {
         rules.add(rule);
     }
 
-    /**
-     * Adds an appointment to the system.
-     *
-     * @param appointment the appointment to add
-     */
     public void addAppointment(Appointment appointment) {
         appointments.add(appointment);
     }
 
-    /**
-     * Returns all available appointments.
-     *
-     * @return list of available appointments
-     */
     public List<Appointment> getAvailableAppointments() {
         List<Appointment> available = new ArrayList<>();
 
@@ -70,21 +49,32 @@ public class AppointmentService {
     }
 
     /**
-     * Books an appointment if available and all rules pass.
-     *
-     * @param appointmentId the appointment id
-     * @return true if booking succeeds, false otherwise
+     * Returns last error message.
+     */
+    public String getLastErrorMessage() {
+        return lastErrorMessage;
+    }
+
+    /**
+     * Books an appointment if all rules pass.
      */
     public boolean bookAppointment(String appointmentId) {
+
+        // reset error
+        lastErrorMessage = null;
+
         for (Appointment appointment : appointments) {
+
             if (appointment.getId().equals(appointmentId)) {
 
                 if (appointment.getStatus() != AppointmentStatus.AVAILABLE) {
+                    lastErrorMessage = "Appointment is not available.";
                     return false;
                 }
 
                 for (BookingRule rule : rules) {
                     if (!rule.isValid(appointment)) {
+                        lastErrorMessage = "Booking failed due to rule violation.";
                         return false;
                     }
                 }
@@ -99,19 +89,21 @@ public class AppointmentService {
                 return true;
             }
         }
+
+        lastErrorMessage = "Appointment not found.";
         return false;
     }
 
-    /**
-     * Cancels an appointment if it exists.
-     *
-     * @param appointmentId the appointment id
-     * @return true if cancelled, false otherwise
-     */
     public boolean cancelAppointment(String appointmentId) {
+
+        lastErrorMessage = null;
+
         for (Appointment appointment : appointments) {
+
             if (appointment.getId().equals(appointmentId)) {
+
                 if (appointment.getStatus() == AppointmentStatus.CONFIRMED) {
+
                     appointment.setStatus(AppointmentStatus.CANCELLED);
 
                     notificationManager.notifyAllObservers(
@@ -120,28 +112,35 @@ public class AppointmentService {
                     );
 
                     return true;
+                } else {
+                    lastErrorMessage = "Only confirmed appointments can be cancelled.";
+                    return false;
                 }
             }
         }
+
+        lastErrorMessage = "Appointment not found.";
         return false;
     }
 
-    /**
-     * Sends a reminder for a given appointment.
-     *
-     * @param appointmentId the appointment id
-     * @return true if reminder sent, false otherwise
-     */
     public boolean sendReminder(String appointmentId) {
+
+        lastErrorMessage = null;
+
         for (Appointment appointment : appointments) {
+
             if (appointment.getId().equals(appointmentId)) {
+
                 notificationManager.notifyAllObservers(
                         appointment.getUser(),
                         "Reminder: you have an upcoming appointment."
                 );
+
                 return true;
             }
         }
+
+        lastErrorMessage = "Appointment not found.";
         return false;
     }
 }
