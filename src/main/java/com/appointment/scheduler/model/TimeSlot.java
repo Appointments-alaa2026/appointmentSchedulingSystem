@@ -3,39 +3,57 @@ package com.appointment.scheduler.model;
 import java.time.LocalDateTime;
 
 /**
- * Represents a time slot with a start and end time.
+ * Represents a time slot for an appointment.
  */
 public class TimeSlot {
 
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
     /**
-     * Constructs a TimeSlot with a start and end time.
+     * Constructs a TimeSlot object.
      *
-     * @param start the start date and time
-     * @param end the end date and time
+     * @param startTime the start time of the slot
+     * @param endTime the end time of the slot
      */
-    public TimeSlot(LocalDateTime start, LocalDateTime end) {
-        this.start = start;
-        this.end = end;
+    public TimeSlot(LocalDateTime startTime, LocalDateTime endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     /**
-     * Gets the start time of the slot.
+     * Returns the start time of the slot.
      *
-     * @return the start time
+     * @return start time
      */
-    public LocalDateTime getStart() {
-        return start;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
     /**
-     * Gets the end time of the slot.
+     * Returns the end time of the slot.
      *
-     * @return the end time
+     * @return end time
      */
-    public LocalDateTime getEnd() {
-        return end;
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * Updates the start time.
+     *
+     * @param startTime new start time
+     */
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * Updates the end time.
+     *
+     * @param endTime new end time
+     */
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }

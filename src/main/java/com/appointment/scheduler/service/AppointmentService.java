@@ -2,9 +2,12 @@ package com.appointment.scheduler.service;
 
 import com.appointment.scheduler.model.Appointment;
 import com.appointment.scheduler.model.AppointmentStatus;
+import com.appointment.scheduler.model.TimeSlot;
+import com.appointment.scheduler.model.User;
 import com.appointment.scheduler.observer.NotificationManager;
 import com.appointment.scheduler.strategy.BookingRule;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +19,6 @@ public class AppointmentService {
     private final List<Appointment> appointments = new ArrayList<>();
     private final List<BookingRule> rules = new ArrayList<>();
     private final NotificationManager notificationManager;
-
-    // ✅ NEW: store last error
     private String lastErrorMessage;
 
     public AppointmentService() {
@@ -48,23 +49,14 @@ public class AppointmentService {
         return available;
     }
 
-    /**
-     * Returns last error message.
-     */
     public String getLastErrorMessage() {
         return lastErrorMessage;
     }
 
-    /**
-     * Books an appointment if all rules pass.
-     */
     public boolean bookAppointment(String appointmentId) {
-
-        // reset error
         lastErrorMessage = null;
 
         for (Appointment appointment : appointments) {
-
             if (appointment.getId().equals(appointmentId)) {
 
                 if (appointment.getStatus() != AppointmentStatus.AVAILABLE) {
@@ -95,52 +87,142 @@ public class AppointmentService {
     }
 
     public boolean cancelAppointment(String appointmentId) {
-
         lastErrorMessage = null;
 
-        for (Appointment appointment : appointments) {
-
-            if (appointment.getId().equals(appointmentId)) {
-
-                if (appointment.getStatus() == AppointmentStatus.CONFIRMED) {
-
-                    appointment.setStatus(AppointmentStatus.CANCELLED);
-
-                    notificationManager.notifyAllObservers(
-                            appointment.getUser(),
-                            "Your appointment has been cancelled."
-                    );
-
-                    return true;
-                } else {
-                    lastErrorMessage = "Only confirmed appointments can be cancelled.";
-                    return false;
-                }
-            }
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
         }
 
-        lastErrorMessage = "Appointment not found.";
-        return false;
+        if (!isFutureAppointment(appointment)) {
+            lastErrorMessage = "Only future appointments can be cancelled.";
+            return false;
+        }
+
+        if (appointment.getStatus() != AppointmentStatus.CONFIRMED) {
+            lastErrorMessage = "Only confirmed appointments can be cancelled.";
+            return false;
+        }
+
+        appointment.setStatus(AppointmentStatus.AVAILABLE);
+
+        notificationManager.notifyAllObservers(
+                appointment.getUser(),
+                "Your appointment has been cancelled."
+        );
+
+        return true;
+    }
+
+    public boolean modifyAppointment(String appointmentId, TimeSlot newTimeSlot) {
+        lastErrorMessage = null;
+
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        if (!isFutureAppointment(appointment)) {
+            lastErrorMessage = "Only future appointments can be modified.";
+            return false;
+        }
+
+        appointment.setTimeSlot(newTimeSlot);
+
+        notificationManager.notifyAllObservers(
+                appointment.getUser(),
+                "Your appointment has been modified."
+        );
+
+        return true;
+    }
+
+    public boolean adminCancelAppointment(User admin, String appointmentId) {
+        lastErrorMessage = null;
+
+        if (!isAdmin(admin)) {
+            lastErrorMessage = "Only administrators can perform this action.";
+            return false;
+        }
+
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        appointment.setStatus(AppointmentStatus.AVAILABLE);
+
+        notificationManager.notifyAllObservers(
+                appointment.getUser(),
+                "Your appointment has been cancelled by the administrator."
+        );
+
+        return true;
+    }
+
+    public boolean adminModifyAppointment(User admin, String appointmentId, TimeSlot newTimeSlot) {
+        lastErrorMessage = null;
+
+        if (!isAdmin(admin)) {
+            lastErrorMessage = "Only administrators can perform this action.";
+            return false;
+        }
+
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        appointment.setTimeSlot(newTimeSlot);
+
+        notificationManager.notifyAllObservers(
+                appointment.getUser(),
+                "Your appointment has been modified by the administrator."
+        );
+
+        return true;
     }
 
     public boolean sendReminder(String appointmentId) {
-
         lastErrorMessage = null;
 
-        for (Appointment appointment : appointments) {
-
-            if (appointment.getId().equals(appointmentId)) {
-
-                notificationManager.notifyAllObservers(
-                        appointment.getUser(),
-                        "Reminder: you have an upcoming appointment."
-                );
-
-                return true;
-            }
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
         }
 
-        lastErrorMessage = "Appointment not found.";
-        return false;
+        notificationManager.notifyAllObservers(
+                appointment.getUser(),
+                "Reminder: you have an upcoming appointment."
+        );
+
+        return true;
+    }
+
+    private Appointment findAppointmentById(String appointmentId) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getId().equals(appointmentId)) {
+                return appointment;
+            }
+        }
+        return null;
+    }
+
+    private boolean isFutureAppointment(Appointment appointment) {
+        if (appointment.getTimeSlot() == null || appointment.getTimeSlot().getStartTime() == null) {
+            return false;
+        }
+        return appointment.getTimeSlot().getStartTime().isAfter(LocalDateTime.now());
+    }
+
+    private boolean isAdmin(User user) {
+        return user != null
+                && user.getName() != null
+                && user.getName().equalsIgnoreCase("admin");
     }
 }
