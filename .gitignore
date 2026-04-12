@@ -1,2 +1,5 @@
 .docx
 /target/
+
+.env
+target/

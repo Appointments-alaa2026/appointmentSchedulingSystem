@@ -1,6 +1,10 @@
 package com.appointment.scheduler.service;
 
-import com.appointment.scheduler.model.*;
+import com.appointment.scheduler.model.Appointment;
+import com.appointment.scheduler.model.AppointmentStatus;
+import com.appointment.scheduler.model.AppointmentType;
+import com.appointment.scheduler.model.TimeSlot;
+import com.appointment.scheduler.model.User;
 import com.appointment.scheduler.observer.NotificationManager;
 import com.appointment.scheduler.observer.Observer;
 import com.appointment.scheduler.strategy.DurationRule;
@@ -10,7 +14,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class NotificationTest {
 
@@ -47,7 +54,7 @@ public class NotificationTest {
 
         service.bookAppointment("1");
 
-        verify(mockObserver).notify(user, "Your appointment has been booked successfully!");
+        verify(mockObserver).notify(eq(user), contains("confirmed"));
     }
 
     @Test
@@ -79,6 +86,6 @@ public class NotificationTest {
 
         service.sendReminder("2");
 
-        verify(mockObserver).notify(user, "Reminder: you have an upcoming appointment.");
+        verify(mockObserver).notify(eq(user), contains("upcoming appointment"));
     }
 }

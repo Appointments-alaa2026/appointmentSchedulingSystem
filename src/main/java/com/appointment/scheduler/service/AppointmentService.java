@@ -75,7 +75,7 @@ public class AppointmentService {
 
                 notificationManager.notifyAllObservers(
                         appointment.getUser(),
-                        "Your appointment has been booked successfully!"
+                        buildBookingConfirmationMessage(appointment)
                 );
 
                 return true;
@@ -109,7 +109,7 @@ public class AppointmentService {
 
         notificationManager.notifyAllObservers(
                 appointment.getUser(),
-                "Your appointment has been cancelled."
+                buildCancellationMessage(appointment)
         );
 
         return true;
@@ -133,7 +133,7 @@ public class AppointmentService {
 
         notificationManager.notifyAllObservers(
                 appointment.getUser(),
-                "Your appointment has been modified."
+                buildModificationMessage(appointment)
         );
 
         return true;
@@ -181,7 +181,7 @@ public class AppointmentService {
 
         notificationManager.notifyAllObservers(
                 appointment.getUser(),
-                "Your appointment has been modified by the administrator."
+                buildAdminModificationMessage(appointment)
         );
 
         return true;
@@ -198,7 +198,34 @@ public class AppointmentService {
 
         notificationManager.notifyAllObservers(
                 appointment.getUser(),
-                "Reminder: you have an upcoming appointment."
+                buildReminderMessage(appointment)
+        );
+
+        return true;
+    }
+
+    public boolean adminSendCustomMessage(User admin, String appointmentId, String customMessage) {
+        lastErrorMessage = null;
+
+        if (!isAdmin(admin)) {
+            lastErrorMessage = "Only administrators can perform this action.";
+            return false;
+        }
+
+        if (customMessage == null || customMessage.trim().isEmpty()) {
+            lastErrorMessage = "Message cannot be empty.";
+            return false;
+        }
+
+        Appointment appointment = findAppointmentById(appointmentId);
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        notificationManager.notifyAllObservers(
+                appointment.getUser(),
+                customMessage
         );
 
         return true;
@@ -224,5 +251,36 @@ public class AppointmentService {
         return user != null
                 && user.getName() != null
                 && user.getName().equalsIgnoreCase("admin");
+    }
+
+    private String buildBookingConfirmationMessage(Appointment appointment) {
+        return "Dear " + appointment.getUser().getName()
+                + ", your appointment has been confirmed for "
+                + appointment.getTimeSlot().getStartTime() + ".";
+    }
+
+    private String buildCancellationMessage(Appointment appointment) {
+        return "Dear " + appointment.getUser().getName()
+                + ", your appointment scheduled for "
+                + appointment.getTimeSlot().getStartTime()
+                + " has been cancelled.";
+    }
+
+    private String buildModificationMessage(Appointment appointment) {
+        return "Dear " + appointment.getUser().getName()
+                + ", your appointment has been modified. New time: "
+                + appointment.getTimeSlot().getStartTime() + ".";
+    }
+
+    private String buildAdminModificationMessage(Appointment appointment) {
+        return "Dear " + appointment.getUser().getName()
+                + ", your appointment has been modified by the administrator. New time: "
+                + appointment.getTimeSlot().getStartTime() + ".";
+    }
+
+    private String buildReminderMessage(Appointment appointment) {
+        return "Reminder: Dear " + appointment.getUser().getName()
+                + ", you have an upcoming appointment at "
+                + appointment.getTimeSlot().getStartTime() + ".";
     }
 }
