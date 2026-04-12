@@ -23,7 +23,6 @@ public class NotificationTest {
 
     @Test
     void testNotificationSentAfterBooking() {
-
         Observer mockObserver = mock(Observer.class);
 
         NotificationManager notificationManager = new NotificationManager();

@@ -1,8 +1,5 @@
 package com.appointment.scheduler.model;
 
-/**
- * Represents an appointment in the scheduling system.
- */
 public class Appointment {
 
     private String id;
@@ -13,9 +10,7 @@ public class Appointment {
     private int participants;
 
     /**
-     * Constructs a new Appointment object.
-     *
-     * @param id the appointment ID
+     * @param id appointment ID
      * @param user the user who owns the appointment
      * @param timeSlot the appointment time slot
      * @param status the appointment status
