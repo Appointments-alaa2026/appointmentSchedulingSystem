@@ -7,12 +7,11 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AppointmentServiceTest {
+class AppointmentServiceTest {
 
     @Test
     void testBookingSuccess() {
         AppointmentService service = new AppointmentService();
-
         User user = new User("1", "Ali", "ali@test.com");
 
         TimeSlot slot = new TimeSlot(
@@ -40,7 +39,6 @@ public class AppointmentServiceTest {
     @Test
     void testBookingFailIfAlreadyBooked() {
         AppointmentService service = new AppointmentService();
-
         User user = new User("1", "Ali", "ali@test.com");
 
         TimeSlot slot = new TimeSlot(
@@ -52,7 +50,7 @@ public class AppointmentServiceTest {
                 "1",
                 user,
                 slot,
-                AppointmentStatus.CONFIRMED, // already booked
+                AppointmentStatus.CONFIRMED,
                 AppointmentType.INDIVIDUAL,
                 1
         );
@@ -62,5 +60,6 @@ public class AppointmentServiceTest {
         boolean result = service.bookAppointment("1", user);
 
         assertFalse(result);
+        assertEquals(AppointmentStatus.CONFIRMED, appointment.getStatus());
     }
 }
