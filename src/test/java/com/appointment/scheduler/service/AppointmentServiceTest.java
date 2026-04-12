@@ -203,7 +203,7 @@ class AppointmentServiceTest {
         assertFalse(result);
         assertEquals("Appointment not found.", service.getLastErrorMessage());
     }
-<<<<<<< HEAD
+
 
     @Test
     void testModifyFutureAppointmentSuccess() {
@@ -327,10 +327,7 @@ class AppointmentServiceTest {
 
         assertFalse(result);
         assertEquals("Only administrators can perform this action.", service.getLastErrorMessage());
-=======
-    /**
-     * Tests that an urgent appointment is valid when it has a valid time slot.
-     */
+    }
     @Test
     void testUrgentAppointmentIsValid() {
         Appointment appointment = new Appointment(
@@ -368,6 +365,5 @@ class AppointmentServiceTest {
 
         AppointmentTypeRule rule = new AppointmentTypeRule();
         assertTrue(rule.isValid(appointment));
->>>>>>> 5ae5ac0 (Sprint 5 done)
     }
 }
