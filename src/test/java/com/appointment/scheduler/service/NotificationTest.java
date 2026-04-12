@@ -30,13 +30,14 @@ public class NotificationTest {
 
         AppointmentService service = new AppointmentService(notificationManager);
 
-        User user = new User("1", "Ali", "ali@test.com");
+        User user = new User("1", "Asma", "asma25loay@gmail.com");
 
         TimeSlot slot = new TimeSlot(
                 LocalDateTime.of(2026, 4, 10, 10, 0),
                 LocalDateTime.of(2026, 4, 10, 11, 0)
         );
 
+        //
         Appointment appointment = new Appointment(
                 "1",
                 user,

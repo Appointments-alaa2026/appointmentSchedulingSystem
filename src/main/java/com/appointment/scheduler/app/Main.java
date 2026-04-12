@@ -23,7 +23,7 @@ public class Main {
         AdminRepository adminRepository = new ConfigAdminRepository();
         AuthService authService = new AuthService(adminRepository);
 
-        boolean loggedIn = authService.login("admin", "1234");
+        boolean loggedIn = authService.login("Alaa", "1234");
 
         if (loggedIn) {
             System.out.println("Login successful.");
