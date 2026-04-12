@@ -1,20 +1,45 @@
 package com.appointment.scheduler.model;
 
+/**
+ * Represents an appointment in the scheduling system.
+ *
+ * This class holds all the essential data related to an appointment,
+ * including the user, time slot, status, type, and number of participants.
+ *
+ * It is part of the domain layer and is used by the service layer
+ * to manage booking, cancellation, and modification operations.
+ *
+ * @author Fatima
+ * @version 1.0
+ */
 public class Appointment {
 
+    // Unique identifier for the appointment
     private String id;
+
+    // The user who owns the appointment
     private User user;
+
+    // The scheduled time slot for the appointment
     private TimeSlot timeSlot;
+
+    // Current status of the appointment (AVAILABLE, CONFIRMED, etc.)
     private AppointmentStatus status;
+
+    // Type of the appointment (INDIVIDUAL, GROUP, VIRTUAL, etc.)
     private AppointmentType type;
+
+    // Number of participants in the appointment
     private int participants;
 
     /**
-     * @param id appointment ID
+     * Constructs a new Appointment object.
+     *
+     * @param id unique identifier of the appointment
      * @param user the user who owns the appointment
-     * @param timeSlot the appointment time slot
-     * @param status the appointment status
-     * @param type the appointment type
+     * @param timeSlot the scheduled time slot
+     * @param status current status of the appointment
+     * @param type type of the appointment
      * @param participants number of participants
      */
     public Appointment(String id, User user, TimeSlot timeSlot,
