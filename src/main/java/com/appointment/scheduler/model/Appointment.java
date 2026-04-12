@@ -1,7 +1,11 @@
 package com.appointment.scheduler.model;
 
 /**
+<<<<<<< HEAD
  * Represents an appointment in the scheduling system.
+=======
+ * Represents an appointment in the system.
+>>>>>>> 5ae5ac0 (Sprint 5 done)
  */
 public class Appointment {
 
@@ -13,9 +17,15 @@ public class Appointment {
     private int participants;
 
     /**
+<<<<<<< HEAD
      * Constructs a new Appointment object.
      *
      * @param id the appointment ID
+=======
+     * Creates a new appointment.
+     *
+     * @param id the appointment id
+>>>>>>> 5ae5ac0 (Sprint 5 done)
      * @param user the user who owns the appointment
      * @param timeSlot the appointment time slot
      * @param status the appointment status
@@ -32,6 +42,7 @@ public class Appointment {
         this.participants = participants;
     }
 
+<<<<<<< HEAD
     /**
      * Returns the appointment ID.
      *
@@ -40,6 +51,31 @@ public class Appointment {
     public String getId() {
         return id;
     }
+=======
+    public String getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public TimeSlot getTimeSlot() {
+        return timeSlot;
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
+    public AppointmentType getType() {
+        return type;
+    }
+
+    public int getParticipants() {
+        return participants;
+    }
+>>>>>>> 5ae5ac0 (Sprint 5 done)
 
     /**
      * Returns the appointment user.
@@ -95,6 +131,7 @@ public class Appointment {
         this.status = status;
     }
 
+<<<<<<< HEAD
     /**
      * Updates the appointment type.
      *
@@ -118,6 +155,8 @@ public class Appointment {
      *
      * @param timeSlot the new time slot
      */
+=======
+>>>>>>> 5ae5ac0 (Sprint 5 done)
     public void setTimeSlot(TimeSlot timeSlot) {
         this.timeSlot = timeSlot;
     }
