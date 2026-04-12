@@ -3,6 +3,7 @@ package com.appointment.scheduler.service;
 import com.appointment.scheduler.model.*;
 import com.appointment.scheduler.strategy.DurationRule;
 import com.appointment.scheduler.strategy.ParticipantLimitRule;
+import com.appointment.scheduler.strategy.TypeRule;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -32,9 +33,9 @@ class AppointmentServiceTest {
 
         service.addAppointment(appointment);
 
-        // 🔥 إضافة rules (مهم جدًا)
         service.addRule(new DurationRule());
         service.addRule(new ParticipantLimitRule());
+        service.addRule(new TypeRule());
 
         boolean result = service.bookAppointment("1");
 
@@ -63,13 +64,40 @@ class AppointmentServiceTest {
 
         service.addAppointment(appointment);
 
-        // 🔥 حتى هون نضيف rules (للتوحيد)
         service.addRule(new DurationRule());
         service.addRule(new ParticipantLimitRule());
+        service.addRule(new TypeRule());
 
         boolean result = service.bookAppointment("1");
 
         assertFalse(result);
         assertEquals(AppointmentStatus.CONFIRMED, appointment.getStatus());
+    }
+
+    @Test
+    void testCancelAppointmentSuccess() {
+        AppointmentService service = new AppointmentService();
+        User user = new User("1", "Ali", "ali@test.com");
+
+        TimeSlot slot = new TimeSlot(
+                LocalDateTime.of(2026, 4, 10, 10, 0),
+                LocalDateTime.of(2026, 4, 10, 11, 0)
+        );
+
+        Appointment appointment = new Appointment(
+                "1",
+                user,
+                slot,
+                AppointmentStatus.CONFIRMED,
+                AppointmentType.INDIVIDUAL,
+                1
+        );
+
+        service.addAppointment(appointment);
+
+        boolean result = service.cancelAppointment("1");
+
+        assertTrue(result);
+        assertEquals(AppointmentStatus.CANCELLED, appointment.getStatus());
     }
 }
