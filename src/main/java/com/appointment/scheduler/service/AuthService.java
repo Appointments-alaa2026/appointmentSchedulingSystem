@@ -2,9 +2,7 @@ package com.appointment.scheduler.service;
 
 import com.appointment.scheduler.model.Admin;
 
-/**
- * Handles admin login and logout
- */
+
 public class AuthService {
 
     private Admin loggedInAdmin;
