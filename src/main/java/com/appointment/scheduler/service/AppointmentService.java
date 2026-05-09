@@ -26,7 +26,7 @@ import com.appointment.scheduler.model.AppointmentType;
  */
 
 public class AppointmentService {
-
+	private static final String APPOINTMENT_NOT_FOUND = "Appointment not found.";
     // List of all appointments in the system
     private final List<Appointment> appointments = new ArrayList<>();
 
@@ -134,7 +134,7 @@ public class AppointmentService {
             }
         }
 
-        lastErrorMessage = "Appointment not found.";
+        lastErrorMessage = APPOINTMENT_NOT_FOUND;
         return false;
     }
 
@@ -149,7 +149,7 @@ public class AppointmentService {
 
         Appointment appointment = findAppointmentById(appointmentId);
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage =APPOINTMENT_NOT_FOUND ;
             return false;
         }
 
@@ -185,7 +185,7 @@ public class AppointmentService {
 
         Appointment appointment = findAppointmentById(appointmentId);
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -221,7 +221,7 @@ public class AppointmentService {
 
         Appointment appointment = findAppointmentById(appointmentId);
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -253,7 +253,7 @@ public class AppointmentService {
 
         Appointment appointment = findAppointmentById(appointmentId);
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -278,7 +278,7 @@ public class AppointmentService {
 
         Appointment appointment = findAppointmentById(appointmentId);
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -305,7 +305,7 @@ public class AppointmentService {
 
         Appointment appointment = findAppointmentById(appointmentId);
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -433,7 +433,7 @@ public class AppointmentService {
         Appointment appointment = findAppointmentById(appointmentId);
 
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -486,7 +486,7 @@ public class AppointmentService {
         Appointment appointment = findAppointmentById(appointmentId);
 
         if (appointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -513,7 +513,7 @@ public class AppointmentService {
         Appointment newAppointment = findAppointmentById(newSlotId);
 
         if (oldAppointment == null || newAppointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
@@ -584,7 +584,7 @@ public class AppointmentService {
         Appointment newAppointment = findAppointmentById(newSlotId);
 
         if (oldAppointment == null || newAppointment == null) {
-            lastErrorMessage = "Appointment not found.";
+            lastErrorMessage = APPOINTMENT_NOT_FOUND;
             return false;
         }
 
