@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -38,7 +39,7 @@ jobs:
           mvn -B jacoco:prepare-agent verify
           org.sonarsource.scanner.maven:sonar-maven-plugin:5.6.0.6792:sonar
           jacoco:report
-         -Dsonar.projectKey=Appointments-alaa2026_appointmentSchedulingSystem
-         -Dsonar.organization=appointments-alaa2026
-         -Dsonar.host.url=https://sonarcloud.io
-         -Dsonar.coverage.exclusions=**/app/Main.java
+          -Dsonar.projectKey=Appointments-alaa2026_appointmentSchedulingSystem
+          -Dsonar.organization=appointments-alaa2026
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.coverage.exclusions=**/app/Main.java
