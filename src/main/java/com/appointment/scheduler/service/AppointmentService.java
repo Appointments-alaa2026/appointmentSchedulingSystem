@@ -10,7 +10,7 @@ import com.appointment.scheduler.strategy.BookingRule;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.appointment.scheduler.model.AppointmentType;
 /**
  * Service responsible for managing appointments.
  *
@@ -376,5 +376,261 @@ public class AppointmentService {
         return "Reminder: Dear " + appointment.getUser().getName()
                 + ", you have an upcoming appointment at "
                 + appointment.getTimeSlot().getStartTime() + ".";
+    }
+    
+    
+    
+    
+    //////////////////////////////////////////////
+    
+    /**
+     * Retrieves all appointments in the system.
+     *
+     * @return list of all appointments
+     */
+    public List<Appointment> getAllAppointments() {
+        return new ArrayList<>(appointments);
+    }
+
+    /**
+     * Retrieves confirmed appointments for a specific user email.
+     *
+     * @param email user email
+     * @return list of confirmed appointments for the user
+     */
+    public List<Appointment> getAppointmentsByUserEmail(String email) {
+        List<Appointment> result = new ArrayList<>();
+
+        if (email == null || email.trim().isEmpty()) {
+            return result;
+        }
+
+        for (Appointment appointment : appointments) {
+            if (appointment.getUser() != null
+                    && appointment.getUser().getEmail() != null
+                    && appointment.getUser().getEmail().equalsIgnoreCase(email.trim())
+                    && appointment.getStatus() == AppointmentStatus.CONFIRMED) {
+                result.add(appointment);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Books an available appointment slot for a real user.
+     *
+     * @param appointmentId selected appointment ID
+     * @param user user who wants to book
+     * @param type appointment type
+     * @param participants number of participants
+     * @return true if booking is successful
+     */
+    public boolean bookAppointment(String appointmentId, User user, AppointmentType type, int participants) {
+        lastErrorMessage = null;
+
+        Appointment appointment = findAppointmentById(appointmentId);
+
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        if (appointment.getStatus() != AppointmentStatus.AVAILABLE) {
+            lastErrorMessage = "Appointment is not available.";
+            return false;
+        }
+
+        if (user == null || user.getName() == null || user.getName().trim().isEmpty()) {
+            lastErrorMessage = "User name is required.";
+            return false;
+        }
+
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            lastErrorMessage = "User email is required.";
+            return false;
+        }
+
+        appointment.setUser(user);
+        appointment.setType(type);
+        appointment.setParticipants(participants);
+
+        for (BookingRule rule : rules) {
+            if (!rule.isValid(appointment)) {
+                lastErrorMessage = "Booking failed due to rule violation.";
+                return false;
+            }
+        }
+
+        appointment.setStatus(AppointmentStatus.CONFIRMED);
+
+        notificationManager.notifyAllObservers(
+                appointment.getUser(),
+                buildBookingConfirmationMessage(appointment)
+        );
+
+        return true;
+    }
+
+    /**
+     * Cancels a user's own future appointment.
+     *
+     * @param appointmentId appointment ID
+     * @param email user email
+     * @return true if cancellation is successful
+     */
+    public boolean cancelAppointmentByUser(String appointmentId, String email) {
+        lastErrorMessage = null;
+
+        Appointment appointment = findAppointmentById(appointmentId);
+
+        if (appointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        if (!belongsToEmail(appointment, email)) {
+            lastErrorMessage = "This appointment does not belong to this user.";
+            return false;
+        }
+
+        return cancelAppointment(appointmentId);
+    }
+
+    /**
+     * Moves a user's confirmed appointment to another available slot.
+     *
+     * @param appointmentId old confirmed appointment ID
+     * @param newSlotId new available slot ID
+     * @param email user email
+     * @return true if rescheduling is successful
+     */
+    public boolean rescheduleAppointmentByUser(String appointmentId, String newSlotId, String email) {
+        lastErrorMessage = null;
+
+        Appointment oldAppointment = findAppointmentById(appointmentId);
+        Appointment newAppointment = findAppointmentById(newSlotId);
+
+        if (oldAppointment == null || newAppointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        if (!belongsToEmail(oldAppointment, email)) {
+            lastErrorMessage = "This appointment does not belong to this user.";
+            return false;
+        }
+
+        if (!isFutureAppointment(oldAppointment)) {
+            lastErrorMessage = "Only future appointments can be modified.";
+            return false;
+        }
+
+        if (newAppointment.getStatus() != AppointmentStatus.AVAILABLE) {
+            lastErrorMessage = "The new slot is not available.";
+            return false;
+        }
+
+        User user = oldAppointment.getUser();
+        AppointmentType type = oldAppointment.getType();
+        int participants = oldAppointment.getParticipants();
+
+        newAppointment.setUser(user);
+        newAppointment.setType(type);
+        newAppointment.setParticipants(participants);
+
+        for (BookingRule rule : rules) {
+            if (!rule.isValid(newAppointment)) {
+                lastErrorMessage = "New appointment violates booking rules.";
+                return false;
+            }
+        }
+
+        newAppointment.setStatus(AppointmentStatus.CONFIRMED);
+
+        oldAppointment.setStatus(AppointmentStatus.AVAILABLE);
+        oldAppointment.setUser(new User("0", "Available", "available@example.com"));
+        oldAppointment.setParticipants(1);
+        oldAppointment.setType(AppointmentType.INDIVIDUAL);
+
+        notificationManager.notifyAllObservers(
+                user,
+                "Dear " + user.getName()
+                        + ", your appointment has been moved to "
+                        + newAppointment.getTimeSlot().getStartTime() + "."
+        );
+
+        return true;
+    }
+
+    /**
+     * Allows administrator to move a reservation to an available slot.
+     *
+     * @param admin admin user
+     * @param appointmentId old appointment ID
+     * @param newSlotId new available slot ID
+     * @return true if operation succeeds
+     */
+    public boolean adminRescheduleAppointment(User admin, String appointmentId, String newSlotId) {
+        lastErrorMessage = null;
+
+        if (!isAdmin(admin)) {
+            lastErrorMessage = "Only administrators can perform this action.";
+            return false;
+        }
+
+        Appointment oldAppointment = findAppointmentById(appointmentId);
+        Appointment newAppointment = findAppointmentById(newSlotId);
+
+        if (oldAppointment == null || newAppointment == null) {
+            lastErrorMessage = "Appointment not found.";
+            return false;
+        }
+
+        if (oldAppointment.getStatus() != AppointmentStatus.CONFIRMED) {
+            lastErrorMessage = "Only confirmed appointments can be moved.";
+            return false;
+        }
+
+        if (newAppointment.getStatus() != AppointmentStatus.AVAILABLE) {
+            lastErrorMessage = "The new slot is not available.";
+            return false;
+        }
+
+        User user = oldAppointment.getUser();
+
+        newAppointment.setUser(user);
+        newAppointment.setType(oldAppointment.getType());
+        newAppointment.setParticipants(oldAppointment.getParticipants());
+        newAppointment.setStatus(AppointmentStatus.CONFIRMED);
+
+        oldAppointment.setStatus(AppointmentStatus.AVAILABLE);
+        oldAppointment.setUser(new User("0", "Available", "available@example.com"));
+        oldAppointment.setParticipants(1);
+        oldAppointment.setType(AppointmentType.INDIVIDUAL);
+
+        notificationManager.notifyAllObservers(
+                user,
+                "Dear " + user.getName()
+                        + ", your appointment has been moved by the administrator to "
+                        + newAppointment.getTimeSlot().getStartTime() + "."
+        );
+
+        return true;
+    }
+
+    /**
+     * Checks if an appointment belongs to a user email.
+     *
+     * @param appointment appointment
+     * @param email user email
+     * @return true if appointment belongs to this email
+     */
+    private boolean belongsToEmail(Appointment appointment, String email) {
+        return appointment != null
+                && appointment.getUser() != null
+                && appointment.getUser().getEmail() != null
+                && email != null
+                && appointment.getUser().getEmail().equalsIgnoreCase(email.trim());
     }
 }

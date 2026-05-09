@@ -141,4 +141,12 @@ public class Appointment {
     public void setTimeSlot(TimeSlot timeSlot) {
         this.timeSlot = timeSlot;
     }
+    /**
+     * Updates the user who owns the appointment.
+     *
+     * @param user the new appointment user
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
