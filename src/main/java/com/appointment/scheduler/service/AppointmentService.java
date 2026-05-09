@@ -21,10 +21,9 @@ import com.appointment.scheduler.model.AppointmentType;
  * It acts as the main service layer connecting the domain logic
  * with application behavior.
  *
- * @author Fatima
+ * @author Alaa
  * @version 1.0
  */
-
 public class AppointmentService {
 	private static final String APPOINTMENT_NOT_FOUND = "Appointment not found.";
     // List of all appointments in the system
