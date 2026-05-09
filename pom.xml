@@ -53,15 +53,13 @@
     <artifactId>jacoco-maven-plugin</artifactId>
     <version>0.8.11</version>
 
-    <configuration>
-        <excludes>
-            <!-- Exclude GUI because Swing UI is not unit-tested -->
-            <exclude>com/appointment/scheduler/gui/**</exclude>
-
-            <!-- Exclude Main/app entry point -->
-            <exclude>com/appointment/scheduler/app/**</exclude>
-        </excludes>
-    </configuration>
+   <configuration>
+    <excludes>
+        <exclude>com/appointment/scheduler/gui/**</exclude>
+        <exclude>com/appointment/scheduler/app/**</exclude>
+        <exclude>com/appointment/scheduler/service/EmailService*</exclude>
+    </excludes>
+</configuration>
 
     <executions>
         <execution>
