@@ -1,6 +1,5 @@
 package com.appointment.scheduler.gui;
-
-
+import javax.swing.WindowConstants;
 import com.appointment.scheduler.model.Appointment;
 import com.appointment.scheduler.model.AppointmentStatus;
 import com.appointment.scheduler.model.AppointmentType;
@@ -50,13 +49,13 @@ public class AppointmentSchedulerGUI extends JFrame {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     /** Service for appointment business logic. */
-    private final AppointmentService appointmentService;
+    private transient  AppointmentService appointmentService;
 
     /** Service for admin authentication. */
-    private final AuthService authService;
+    private transient AuthService authService;
 
     /** Mock notification observer. */
-    private final InMemoryNotification notificationObserver;
+    private transient InMemoryNotification notificationObserver;
 
     /** Main tabs. */
     private final JTabbedPane tabs = new JTabbedPane();
@@ -127,8 +126,7 @@ public class AppointmentSchedulerGUI extends JFrame {
         setTitle("Appointment Scheduling System - Phase 2");
         setSize(1000, 650);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         tabs.addTab("Book Appointment", buildBookingPanel());
         tabs.addTab("My Appointments", buildUserPanel());
         tabs.addTab("Admin Login", buildAdminLoginPanel());

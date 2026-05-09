@@ -24,6 +24,7 @@ import com.appointment.scheduler.model.AppointmentType;
  * @author Fatima
  * @version 1.0
  */
+
 public class AppointmentService {
 
     // List of all appointments in the system
