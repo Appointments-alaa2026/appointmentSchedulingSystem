@@ -1,5 +1,6 @@
 package com.appointment.scheduler.gui;
 
+
 import com.appointment.scheduler.model.Appointment;
 import com.appointment.scheduler.model.AppointmentStatus;
 import com.appointment.scheduler.model.AppointmentType;
