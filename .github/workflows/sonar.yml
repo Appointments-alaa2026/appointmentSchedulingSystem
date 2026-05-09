@@ -31,7 +31,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Build and analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B jacoco:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar jacoco:report -Dsonar.projectKey=appointments-alaa2026_appointmentSchedulingSystem -Dsonar.organization=appointments-alaa2026 -Dsonar.coverage.exclusions=**/app/Main.java
+- name: Build and analyze
+  env:
+    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  run: mvn -B jacoco:prepare-agent verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar jacoco:report -Dsonar.projectKey=Appointments-alaa2026_appointmentSchedulingSystem -Dsonar.organization=appointments-alaa2026 -Dsonar.coverage.exclusions=**/app/Main.java
