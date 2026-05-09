@@ -39,6 +39,6 @@ jobs:
           org.sonarsource.scanner.maven:sonar-maven-plugin:5.6.0.6792:sonar
           jacoco:report
           -Dsonar.projectKey=Appointments-alaa2026_appointmentSchedulingSystem
-          -Dsonar.organization=appOintments-alaa2026
+          -Dsonar.organization=appointments-alaa2026
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.coverage.exclusions=**/app/Main.java
