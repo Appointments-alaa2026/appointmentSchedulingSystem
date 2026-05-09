@@ -42,4 +42,5 @@ jobs:
           -Dsonar.projectKey=Appointments-alaa2026_appointmentSchedulingSystem
           -Dsonar.organization=appointments-alaa2026
           -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.coverage.exclusions=**/app/Main.java
+          -Dsonar.exclusions=**/javadoc/**
+          -Dsonar.coverage.exclusions=**/app/Main.java,**/gui/**
