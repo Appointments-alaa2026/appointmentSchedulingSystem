@@ -29,6 +29,8 @@ public class AppointmentService {
 	
 	
     private static final String DEAR_PREFIX = "Dear ";
+    private static final String ADMIN_ONLY_MESSAGE =
+            "Only administrators can perform this action.";
     
     
     // List of all appointments in the system
@@ -219,7 +221,7 @@ public class AppointmentService {
         lastErrorMessage = null;
 
         if (!isAdmin(admin)) {
-            lastErrorMessage = "Only administrators can perform this action.";
+            lastErrorMessage = ADMIN_ONLY_MESSAGE;
             return false;
         }
 
@@ -251,7 +253,7 @@ public class AppointmentService {
         lastErrorMessage = null;
 
         if (!isAdmin(admin)) {
-            lastErrorMessage = "Only administrators can perform this action.";
+            lastErrorMessage = ADMIN_ONLY_MESSAGE;
             return false;
         }
 
@@ -298,7 +300,7 @@ public class AppointmentService {
         lastErrorMessage = null;
 
         if (!isAdmin(admin)) {
-            lastErrorMessage = "Only administrators can perform this action.";
+            lastErrorMessage = ADMIN_ONLY_MESSAGE;
             return false;
         }
 
@@ -580,7 +582,7 @@ public class AppointmentService {
         lastErrorMessage = null;
 
         if (!isAdmin(admin)) {
-            lastErrorMessage = "Only administrators can perform this action.";
+            lastErrorMessage = ADMIN_ONLY_MESSAGE;
             return false;
         }
 
