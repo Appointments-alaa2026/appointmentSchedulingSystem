@@ -26,6 +26,11 @@ import com.appointment.scheduler.model.AppointmentType;
  */
 public class AppointmentService {
 	private static final String APPOINTMENT_NOT_FOUND = "Appointment not found.";
+	
+	
+    private static final String DEAR_PREFIX = "Dear ";
+    
+    
     // List of all appointments in the system
     private final List<Appointment> appointments = new ArrayList<>();
 
@@ -348,32 +353,32 @@ public class AppointmentService {
     }
 
     private String buildBookingConfirmationMessage(Appointment appointment) {
-        return "Dear " + appointment.getUser().getName()
+        return "DEAR_PREFIX" + appointment.getUser().getName()
                 + ", your appointment has been confirmed for "
                 + appointment.getTimeSlot().getStartTime() + ".";
     }
 
     private String buildCancellationMessage(Appointment appointment) {
-        return "Dear " + appointment.getUser().getName()
+        return "DEAR_PREFIX " + appointment.getUser().getName()
                 + ", your appointment scheduled for "
                 + appointment.getTimeSlot().getStartTime()
                 + " has been cancelled.";
     }
 
     private String buildModificationMessage(Appointment appointment) {
-        return "Dear " + appointment.getUser().getName()
+        return "DEAR_PREFIX " + appointment.getUser().getName()
                 + ", your appointment has been modified. New time: "
                 + appointment.getTimeSlot().getStartTime() + ".";
     }
 
     private String buildAdminModificationMessage(Appointment appointment) {
-        return "Dear " + appointment.getUser().getName()
+        return "DEAR_PREFIX " + appointment.getUser().getName()
                 + ", your appointment has been modified by the administrator. New time: "
                 + appointment.getTimeSlot().getStartTime() + ".";
     }
 
     private String buildReminderMessage(Appointment appointment) {
-        return "Reminder: Dear " + appointment.getUser().getName()
+        return "Reminder: DEAR_PREFIX" + appointment.getUser().getName()
                 + ", you have an upcoming appointment at "
                 + appointment.getTimeSlot().getStartTime() + ".";
     }
@@ -555,7 +560,7 @@ public class AppointmentService {
 
         notificationManager.notifyAllObservers(
                 user,
-                "Dear " + user.getName()
+                "DEAR_PREFIX" + user.getName()
                         + ", your appointment has been moved to "
                         + newAppointment.getTimeSlot().getStartTime() + "."
         );
@@ -611,7 +616,7 @@ public class AppointmentService {
 
         notificationManager.notifyAllObservers(
                 user,
-                "Dear " + user.getName()
+                "DEAR_PREFIX " + user.getName()
                         + ", your appointment has been moved by the administrator to "
                         + newAppointment.getTimeSlot().getStartTime() + "."
         );
